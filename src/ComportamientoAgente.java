@@ -1,11 +1,14 @@
 import jade.core.Agent;
 //import jade.core.behaviours.Behaviour;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.TickerBehaviour;
+
 import java.awt.Point;
 
 public class ComportamientoAgente extends Agent {
-    private Mapa mapa;
     private Sensores sensores;
+    private int incremento = 0;
 
 
     public ComportamientoAgente(){
@@ -16,9 +19,9 @@ public class ComportamientoAgente extends Agent {
     public void setup() {
         // Inicialización con argumentos personalizados
         Object[] args = getArguments();
-        if (args != null && args.length == 2) {
-            mapa = (Mapa) args[0];
-            sensores = (Sensores) args[1];
+        if (args != null && args.length == 1) {
+
+            sensores = (Sensores) args[0];
             System.out.println("Argumentos correctos.");
 
         } else {
@@ -27,16 +30,23 @@ public class ComportamientoAgente extends Agent {
             doDelete(); // Eliminar el agente si los argumentos no son válidos
         }
 
-        addBehaviour(new OneShotBehaviour() {
+        addBehaviour(new TickerBehaviour(null, 2000) {
+
             @Override
-            public void action() {
-                mapa.mostrarMapa();
-                sensores.setAgent(new Point(0,0));
-                sensores.setObjetivo(new Point(2,2));
+            protected void onTick() {
                 System.out.println();
                 sensores.getMapa().mostrarMapa();
-                doDelete();
+                System.out.println("Lo que veo");
+                System.out.println(sensores.see());
+                System.out.println("Posicion del agente:");
+                System.out.println(sensores.getAgentePos());
+                sensores.actualizarPosicionAgente(sensores.getAgentePos().x, sensores.getAgentePos().y+1);
+                incremento++;
+                if(incremento == 5){
+                    stop();
+                }
             }
+
         });
 
     }

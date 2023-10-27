@@ -80,6 +80,5 @@ public class Mapa {
             System.out.println(); // Salto de línea al final de cada fila
         }
     }
-
 }
 
