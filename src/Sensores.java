@@ -57,6 +57,7 @@ public class Sensores {
     }
 
 
+
     public ArrayList<Integer> see() {
         int fila = agent_pos.x;
         int columna = agent_pos.y;
