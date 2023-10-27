@@ -1,7 +1,5 @@
 import jade.core.Agent;
 //import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 
 import java.awt.Point;
@@ -30,20 +28,25 @@ public class ComportamientoAgente extends Agent {
             doDelete(); // Eliminar el agente si los argumentos no son válidos
         }
 
-        addBehaviour(new TickerBehaviour(null, 2000) {
+        addBehaviour(new TickerBehaviour(null, 1000) {
 
             @Override
             protected void onTick() {
                 System.out.println();
                 sensores.getMapa().mostrarMapa();
-                System.out.println("Lo que veo");
-                System.out.println(sensores.see());
-                System.out.println("Posicion del agente:");
-                System.out.println(sensores.getAgentePos());
-                sensores.actualizarPosicionAgente(sensores.getAgentePos().x, sensores.getAgentePos().y+1);
-                incremento++;
-                if(incremento == 5){
+                System.out.println("Posicion del agente:" + sensores.getAgentePos());
+                System.out.println("Posicion del objetivo:" + sensores.getObjetivo());
+                POSICIONES p = sensores.determinarDireccion();
+                System.out.println("El objetivo se encuentra al: "+p);
+                if(sensores.getAgentePos().equals(sensores.getObjetivo())){
+                    System.out.println("ENCONTRADO");
                     stop();
+                    doDelete();
+                } else if (sensores.getAround(p) >= 0) {
+                    System.out.println("Valor next cell"+sensores.getAround(p));
+                    Point next_p = sensores.getNextPositon(p);
+                    System.out.println("Siguiente posicion"+next_p.toString());
+                    sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y+next_p.y);
                 }
             }
 

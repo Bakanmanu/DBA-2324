@@ -7,15 +7,12 @@ import java.util.List;
 public class Mapa {
     private ArrayList<ArrayList<Integer>> matriz;
 
-    public Mapa(int nf, int nc, List<Integer> valores){
-
-    }
     public Mapa(String archivoMapa) {
         cargarMapaDesdeArchivo(archivoMapa);
     }
 
     Mapa() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private void cargarMapaDesdeArchivo(String archivoMapa) {
