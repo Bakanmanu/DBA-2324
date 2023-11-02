@@ -2,11 +2,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 public class Sensores {
 
     private Mapa mapa;
-    final int ID_AGENTE = 9;
-    final int ID_OBJETIVO = 5;
+    private Mapa memoria;
+    final int ID_AGENTE = -9;
+    final int ID_OBJETIVO = -5;
 
     private Point agent_pos;
     private Point obj_pos;
@@ -14,11 +16,13 @@ public class Sensores {
     private ArrayList<Integer> vision;
 
     public Sensores(Mapa mapa, int agent_f, int agent_c, int obj_f, int obj_c) {
-        this.mapa = mapa;
+        this.mapa = mapa.clone();
+        this.memoria = mapa.clone();
         this.agent_pos = new Point(agent_f, agent_c);
         this.obj_pos = new Point(obj_f, obj_c);
-        mapa.setValorCelda(agent_pos.x, agent_pos.y, ID_AGENTE);
+        setAgent(agent_pos);
         setObjetivo(obj_pos);
+        memoria.setValorCelda(agent_pos.x, agent_pos.y, 1);
         vision = see();
     }
 
@@ -26,13 +30,15 @@ public class Sensores {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void actualizarPosicionAgente(int fila, int columna) {
+    public Point actualizarPosicionAgente(int fila, int columna) {
         Point last = new Point(agent_pos);
         agent_pos.setLocation(new Point(fila, columna));
-        mapa.setValorCelda(agent_pos.x, agent_pos.y, ID_AGENTE);
+        setAgent(agent_pos);
         mapa.setValorCelda(last.x, last.y, 0);
-        vision = see();
+        memoria.setValorCelda(agent_pos.x, agent_pos.y, memoria.getValorCelda(agent_pos.x, agent_pos.y)+1);
 
+        vision = see();
+        return last;
     }
 
     public void setAgent(Point p) {
@@ -51,10 +57,23 @@ public class Sensores {
         return agent_pos;
     }
 
+    public ArrayList<Integer> getVision(){
+        return vision;
+    }
+
+    public void setVision(ArrayList<Integer> v){
+        vision = v;
+    }
+
 
     public Mapa getMapa() {
         return mapa;
     }
+
+    public Mapa getMemoria() {
+        return memoria;
+    }
+
 
 
     public ArrayList<Integer> see() {
@@ -62,13 +81,13 @@ public class Sensores {
         int columna = agent_pos.y;
 
         ArrayList<Integer> submatriz = new ArrayList<>();
-        int filas = mapa.getFilas();
-        int columnas = mapa.getColumnas();
+        int filas = memoria.getFilas();
+        int columnas = memoria.getColumnas();
 
         for (int i = fila - 1; i <= fila + 1; i++) {
             for (int j = columna - 1; j <= columna + 1; j++) {
                 if (i >= 0 && i < filas && j >= 0 && j < columnas) {
-                    submatriz.add(mapa.getValorCelda(i, j));
+                    submatriz.add(memoria.getValorCelda(i, j));
                 } else {
                     submatriz.add(null);  // Puedes usar otro valor especial si está fuera de la matriz
                 }
@@ -78,7 +97,7 @@ public class Sensores {
     }
 
     public Integer getAround(POSICIONES p) {
-        System.out.println(Arrays.toString(vision.toArray()));
+//        System.out.println(Arrays.toString(vision.toArray()));
         return switch (p) {
             case ARRIBA -> this.vision.get(1);
             case ABAJO -> this.vision.get(7);
@@ -120,6 +139,14 @@ public class Sensores {
             }
         }
         //CUANDO SON IGUALES METER ALGO PARA K NO SE QUEDE PILLAO
+    }
+
+    public POSICIONES opposite(POSICIONES p){
+        if(p == POSICIONES.ABAJO) return POSICIONES.ARRIBA;
+        else if(p == POSICIONES.ARRIBA) return POSICIONES.ABAJO;
+        else if(p == POSICIONES.DERECHA) return POSICIONES.IZQUIERDA;
+        else if(p == POSICIONES.IZQUIERDA) return POSICIONES.DERECHA;
+        return p;
     }
 
 }

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mapa {
+public class Mapa implements Cloneable {
     private ArrayList<ArrayList<Integer>> matriz;
 
     public Mapa(String archivoMapa) {
@@ -51,7 +51,6 @@ public class Mapa {
         if (fila >= 0 && fila < matriz.size() && columna >= 0 && columna < matriz.get(0).size()) {
             matriz.get(fila).set(columna, valor);
         }
-        return ; // Valor por defecto para celdas fuera del mapa
     }
 
     public int getFilas() {
@@ -77,5 +76,22 @@ public class Mapa {
             System.out.println(); // Salto de línea al final de cada fila
         }
     }
-}
 
+    @Override
+    public Mapa clone() {
+        try {
+            Mapa copia = (Mapa) super.clone();
+
+            // Clonar la matriz
+            copia.matriz = new ArrayList<>();
+            for (ArrayList<Integer> fila : this.matriz) {
+                ArrayList<Integer> nuevaFila = new ArrayList<>(fila);
+                copia.matriz.add(nuevaFila);
+            }
+
+            return copia;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
+}
