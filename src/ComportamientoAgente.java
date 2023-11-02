@@ -46,11 +46,11 @@ public class ComportamientoAgente extends Agent {
                 System.out.println("El objetivo se encuentra al: "+p);
                 System.out.println("Get around: "+sensores.getAround(p));
 
-                if(sensores.getAgentePos().equals(sensores.getObjetivo())){
+                if(sensores.getAgentePos().equals(sensores.getObjetivo())) {
                     System.out.println("ENCONTRADO");
                     stop();
                     doDelete();
-                } else if (sensores.getAround(p) >= 0) {
+                } else if (sensores.getAround(p) >= 0 || sensores.getAround(p) == sensores.ID_OBJETIVO) {
                     System.out.println("Valor next cell"+sensores.getAround(p));
                     Point next_p = sensores.getNextPositon(p);
                     System.out.println("Siguiente posicion"+next_p.toString());
@@ -67,18 +67,23 @@ public class ComportamientoAgente extends Agent {
                     List<Map.Entry<POSICIONES, Integer>> entryList = new ArrayList<>(mejores.entrySet());
 
                     // Ordenar la lista de entradas por los valores en orden ascendente
-                    entryList.sort(Comparator.comparing(Map.Entry::getValue/*,Comparator.reverseOrder()*/));
+//                    entryList.sort(Comparator.comparing(Map.Entry::getValue/*,Comparator.reverseOrder()*/));
+//                    entryList.sort(Comparator.comparing(entry -> entry.getValue() == null ? null : entry.getValue()));
+                    entryList.sort(Comparator.comparing(entry -> entry.getValue(), Comparator.nullsLast(Comparator.naturalOrder())));
+
+                    Point next_p = null;
                     for (Map.Entry<POSICIONES, Integer> entry : entryList) {
                         POSICIONES key = entry.getKey();
                         Integer value = entry.getValue();
                         if(value >= 0) {
-                            Point next_p = sensores.getNextPositon(key);
+                            next_p = sensores.getNextPositon(key);
                             System.out.println("Siguiente posicion2: " + key);
-                            Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y + next_p.y);
-                            sensores.getMapa().setValorCelda(last.x, last.y, sensores.getMapa().getValorCelda(last.x, last.y) + 1);
-                            sensores.setVision(sensores.see());
+                            break;
                         }
                     }
+                    Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y + next_p.y);
+                    sensores.getMapa().setValorCelda(last.x, last.y, sensores.getMapa().getValorCelda(last.x, last.y) + 1);
+                    sensores.setVision(sensores.see());
 
 
                 }
