@@ -5,8 +5,8 @@ import java.util.Arrays;
 public class Sensores {
 
     private Mapa mapa;
-    final int ID_AGENTE = 9;
-    final int ID_OBJETIVO = 5;
+    final int ID_AGENTE = -9;
+    final int ID_OBJETIVO = -5;
 
     private Point agent_pos;
     private Point obj_pos;
@@ -26,13 +26,13 @@ public class Sensores {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void actualizarPosicionAgente(int fila, int columna) {
+    public Point actualizarPosicionAgente(int fila, int columna) {
         Point last = new Point(agent_pos);
         agent_pos.setLocation(new Point(fila, columna));
         mapa.setValorCelda(agent_pos.x, agent_pos.y, ID_AGENTE);
         mapa.setValorCelda(last.x, last.y, 0);
         vision = see();
-
+        return last;
     }
 
     public void setAgent(Point p) {
@@ -49,6 +49,14 @@ public class Sensores {
 
     public Point getAgentePos() {
         return agent_pos;
+    }
+
+    public ArrayList<Integer> getVision(){
+        return vision;
+    }
+
+    public void setVision(ArrayList<Integer> v){
+        vision = v;
     }
 
 
@@ -79,7 +87,7 @@ public class Sensores {
     }
 
     public Integer getAround(POSICIONES p) {
-        System.out.println(Arrays.toString(vision.toArray()));
+//        System.out.println(Arrays.toString(vision.toArray()));
         return switch (p) {
             case ARRIBA -> this.vision.get(1);
             case ABAJO -> this.vision.get(7);
