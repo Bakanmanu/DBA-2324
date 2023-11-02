@@ -89,6 +89,7 @@ public class ComportamientoAgente extends Agent {
                                 System.out.println("Siguiente posicion2: " + key);
                                 break;
                             }
+
                         }
                     }
                     Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y + next_p.y);
