@@ -40,6 +40,10 @@ public class ComportamientoAgente extends Agent {
             protected void onTick() {
                 System.out.println();
                 sensores.getMapa().mostrarMapa();
+                System.out.println("---------------------------------------------");
+                sensores.getMemoria().mostrarMapa();
+                System.out.println("---------------------------------------------");
+
                 System.out.println("Posicion del agente:" + sensores.getAgentePos());
                 System.out.println("Posicion del objetivo:" + sensores.getObjetivo());
                 POSICIONES p = sensores.determinarDireccion();
@@ -50,41 +54,49 @@ public class ComportamientoAgente extends Agent {
                     System.out.println("ENCONTRADO");
                     stop();
                     doDelete();
-                } else if (sensores.getAround(p) >= 0 || sensores.getAround(p) == sensores.ID_OBJETIVO) {
+                } else if (/* sensores.getAround(p) >= 0 || */ sensores.getAround(p) == sensores.ID_OBJETIVO) {
                     System.out.println("Valor next cell"+sensores.getAround(p));
                     Point next_p = sensores.getNextPositon(p);
                     System.out.println("Siguiente posicion"+next_p.toString());
                     Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y+next_p.y);
-                    sensores.getMapa().setValorCelda(last.x,last.y, sensores.getMapa().getValorCelda(last.x, last.y)+1);
+//                    sensores.getMapa().setValorCelda(last.x,last.y, sensores.getMapa().getValorCelda(last.x, last.y)+1);
                     sensores.setVision(sensores.see());
 
 
                 } else {
-                    Map<POSICIONES,Integer> mejores = new HashMap<>();
-                    for (POSICIONES pos : POSICIONES.values()){
-                        mejores.put(pos,sensores.getAround(pos));
-                    }
-                    List<Map.Entry<POSICIONES, Integer>> entryList = new ArrayList<>(mejores.entrySet());
-
-                    // Ordenar la lista de entradas por los valores en orden ascendente
-//                    entryList.sort(Comparator.comparing(Map.Entry::getValue/*,Comparator.reverseOrder()*/));
-//                    entryList.sort(Comparator.comparing(entry -> entry.getValue() == null ? null : entry.getValue()));
-                    entryList.sort(Comparator.comparing(entry -> entry.getValue(), Comparator.nullsLast(Comparator.naturalOrder())));
-
                     Point next_p = null;
-                    for (Map.Entry<POSICIONES, Integer> entry : entryList) {
-                        POSICIONES key = entry.getKey();
-                        Integer value = entry.getValue();
-                        if(value >= 0) {
-                            next_p = sensores.getNextPositon(key);
-                            System.out.println("Siguiente posicion2: " + key);
-                            break;
+                    if (sensores.getAround(p) == 0) {
+                        next_p = sensores.getNextPositon(p);
+                    } else {
+
+
+                        Map<POSICIONES, Integer> mejores = new HashMap<>();
+                        for (POSICIONES pos : POSICIONES.values()) {
+                            mejores.put(pos, sensores.getAround(pos));
+                        }
+                        List<Map.Entry<POSICIONES, Integer>> entryList = new ArrayList<>(mejores.entrySet());
+                        entryList.sort(Comparator.comparing(entry -> entry.getValue(), Comparator.nullsLast(Comparator.naturalOrder())));
+                        for (Map.Entry<POSICIONES, Integer> entry : entryList){
+                            System.out.println("Opciones :"+ entry.getKey() + " : " + entry.getValue());
+                        }
+
+                        for (Map.Entry<POSICIONES, Integer> entry : entryList) {
+                            POSICIONES key = entry.getKey();
+                            Integer value = entry.getValue();
+                            if (value >= 0 /*&& key != sensores.opposite(p)*/) {
+                                System.out.println("Escogida :"+ key + " : " + value);
+                                next_p = sensores.getNextPositon(key);
+                                System.out.println("Siguiente posicion2: " + key);
+                                break;
+                            }
                         }
                     }
                     Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y + next_p.y);
-                    sensores.getMapa().setValorCelda(last.x, last.y, sensores.getMapa().getValorCelda(last.x, last.y) + 1);
-                    sensores.setVision(sensores.see());
+                    System.out.println("\tActualizando el valor de la celda: " + last);
+                    System.out.println("\tValor de la celda: " + sensores.getMapa().getValorCelda(last.x, last.y));
 
+//                    sensores.getMapa().setValorCelda(last.x, last.y, sensores.getMapa().getValorCelda(last.x, last.y) + 1);
+                    sensores.setVision(sensores.see());
 
                 }
             }
