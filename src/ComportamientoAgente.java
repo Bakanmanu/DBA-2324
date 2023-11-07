@@ -300,14 +300,15 @@ public class ComportamientoAgente extends Agent {
         protected void onTick() {
             addBehaviour(new MostrarMapa(sensores));
             addBehaviour(new GetInformation(sensores));
-            if (!objetivoEncontrado) {
-                VerificarObjetivo verificarObjetivo = new VerificarObjetivo(sensores);
-                objetivoEncontrado = verificarObjetivo.getenObjetivo();
-                decisionTomada = objetivoEncontrado;
-                System.out.println("OBJ ENCONTRADO" + objetivoEncontrado);
-                if(objetivoEncontrado) stop();
-                addBehaviour(verificarObjetivo);
-
+            VerificarObjetivo verificarObjetivo = new VerificarObjetivo(sensores);
+            addBehaviour(verificarObjetivo);
+            objetivoEncontrado = verificarObjetivo.getenObjetivo();
+            decisionTomada = objetivoEncontrado;
+            System.out.println("OBJ ENCONTRADO" + objetivoEncontrado);
+            if(objetivoEncontrado) {
+                stop();
+                doDelete();
+                return;
             }
 
             if (!decisionTomada) {
