@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class Sensores {
 
-    private Mapa mapa;
-    private Mapa memoria;
+    private Mapa mapa;          // Mapa
+    private Mapa memoria;       // Memoria por donde voy pasando
     final int ID_AGENTE = -9;
     final int ID_OBJETIVO = -5;
 
@@ -14,6 +14,7 @@ public class Sensores {
     private Point obj_pos;
 
     private ArrayList<Integer> vision;
+    private ArrayList<POSICIONES> posiciones;
 
     public Sensores(Mapa mapa, int agent_f, int agent_c, int obj_f, int obj_c) {
         this.mapa = mapa.clone();
@@ -22,8 +23,11 @@ public class Sensores {
         this.obj_pos = new Point(obj_f, obj_c);
         setAgent(agent_pos);
         setObjetivo(obj_pos);
-        memoria.setValorCelda(agent_pos.x, agent_pos.y, 1);
+        memoria.setValorCelda(agent_pos.x, agent_pos.y, 1); // Nada mas aparezco pongo un 1 en la memoria
+        memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO); // Nada mas aparezco pongo un 1 en la memoria
+
         vision = see();
+        posiciones = determinarDireccion();
     }
 
     Sensores() {
@@ -65,7 +69,6 @@ public class Sensores {
         vision = v;
     }
 
-
     public Mapa getMapa() {
         return mapa;
     }
@@ -75,7 +78,7 @@ public class Sensores {
     }
 
 
-
+    // Funcion que dada la posicion del agente mira a su alrededer y nos devuelve las casiilas adyacentes
     public ArrayList<Integer> see() {
         int fila = agent_pos.x;
         int columna = agent_pos.y;
@@ -96,8 +99,25 @@ public class Sensores {
         return submatriz;
     }
 
-    public Integer getAround(POSICIONES p) {
-//        System.out.println(Arrays.toString(vision.toArray()));
+
+
+    public ArrayList<Integer> getAround(ArrayList<POSICIONES> p) {
+        ArrayList<Integer> direcciones = new ArrayList<>();
+        for(POSICIONES pos : p){
+            direcciones.add( switch (pos) {
+                case ARRIBA -> this.vision.get(1);
+                case ABAJO -> this.vision.get(7);
+                case DERECHA -> this.vision.get(5);
+                case IZQUIERDA -> this.vision.get(3);
+                default -> null;
+            });
+
+
+        }
+
+        return direcciones;
+}
+    public Integer getSimpleAround(POSICIONES p) {
         return switch (p) {
             case ARRIBA -> this.vision.get(1);
             case ABAJO -> this.vision.get(7);
@@ -106,47 +126,61 @@ public class Sensores {
             default -> null;
         };
     }
-
-    public Point getNextPositon(POSICIONES p) {
-        return switch (p) {
-            case ARRIBA -> new Point(-1,0);
-            case ABAJO -> new Point(1,0);
-            case DERECHA -> new Point(0,1);
-            case IZQUIERDA -> new Point(0,-1);
-            default -> null;
-        };
-    }
-
-    public int distanciaManhattan() {
-        return Math.abs(agent_pos.x - obj_pos.x) + Math.abs(agent_pos.y - obj_pos.y);
-    }
-
-    public POSICIONES determinarDireccion() {
+    // Devuelve la dirección hacia donde está el objetivo
+    // "x" son las filas  "y" son las columnas tipo matriz
+    public ArrayList<POSICIONES> determinarDireccion() {
         int distanciaHorizontal = Math.abs(agent_pos.x - obj_pos.x);
         int distanciaVertical = Math.abs(agent_pos.y - obj_pos.y);
-
-        if (distanciaHorizontal > distanciaVertical) {
-            if (agent_pos.x < obj_pos.x) {
-                return POSICIONES.ABAJO;
-            } else {
-                return POSICIONES.ARRIBA;
-            }
+        ArrayList<POSICIONES> direcciones = new ArrayList<>();
+        if (agent_pos.x < obj_pos.x) {
+            direcciones.add(POSICIONES.ABAJO);
         } else {
-            if (agent_pos.y < obj_pos.y) {
-                return POSICIONES.DERECHA;
-            } else {
-                return POSICIONES.IZQUIERDA;
-            }
+            direcciones.add(POSICIONES.ARRIBA);
+        }/*ROMAN MARICON*/
+        if (agent_pos.y < obj_pos.y) {
+            direcciones.add(POSICIONES.DERECHA);
+
+        } else {
+            direcciones.add(POSICIONES.IZQUIERDA);
         }
-        //CUANDO SON IGUALES METER ALGO PARA K NO SE QUEDE PILLAO
+        return direcciones;
     }
 
-    public POSICIONES opposite(POSICIONES p){
-        if(p == POSICIONES.ABAJO) return POSICIONES.ARRIBA;
-        else if(p == POSICIONES.ARRIBA) return POSICIONES.ABAJO;
-        else if(p == POSICIONES.DERECHA) return POSICIONES.IZQUIERDA;
-        else if(p == POSICIONES.IZQUIERDA) return POSICIONES.DERECHA;
-        return p;
+            // Devuelve la dirección opuesta a 'p'
+            // Es que esta no funciona muy bien cuando el objetivo esta arriba y hay que ir hacia abajo
+            public POSICIONES opposite(POSICIONES p){
+                if(p == POSICIONES.ABAJO) return POSICIONES.ARRIBA;
+                else if(p == POSICIONES.ARRIBA) return POSICIONES.ABAJO;
+                else if(p == POSICIONES.DERECHA) return POSICIONES.IZQUIERDA;
+                else if(p == POSICIONES.IZQUIERDA) return POSICIONES.DERECHA;
+                return p;
+            }
+
+            // Dada una posicion a la que deberia desplazarma "p" ver que es lo que se encuentra en esa direccion (vision)
+        // Puede devolver MUR0 = -1
+        //                No explorado = 0
+        //                Ya visitado > 1
+        //                null
+        // Devuelve la posicion de la celda de al lado del agente en la direccion especificada
+        // Mas que posicion es la direccion, fiajte en los Points, es una suma de la
+        public Point getNextPositon(POSICIONES p) {
+            return switch (p) {
+                case ARRIBA -> new Point(-1, 0);
+                case ABAJO -> new Point(1, 0);
+                case DERECHA -> new Point(0, 1);
+                case IZQUIERDA -> new Point(0, -1);
+                default -> null;
+            };
+        }
+        public int distanciaManhattan() {
+                return Math.abs(agent_pos.x - obj_pos.x) + Math.abs(agent_pos.y - obj_pos.y);
+        }
+
+    public ArrayList<POSICIONES> getPosiciones() {
+        return posiciones;
     }
 
+    public void setPosiciones(ArrayList<POSICIONES> posiciones) {
+        this.posiciones = posiciones;
+    }
 }
