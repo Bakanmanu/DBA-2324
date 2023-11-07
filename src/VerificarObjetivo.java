@@ -1,8 +1,8 @@
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
 
 class VerificarObjetivo extends OneShotBehaviour {
     private Sensores sensores;
-    private boolean enObjetivo = false;
 
     public VerificarObjetivo(Sensores sensores) {
         this.sensores = sensores;
@@ -11,17 +11,7 @@ class VerificarObjetivo extends OneShotBehaviour {
     public void action() {
         if (sensores.getAgentePos().equals(sensores.getObjetivo())) {
             System.out.println("ENCONTRADO");
-            // Realiza las acciones necesarias cuando el agente encuentra el objetivo
-            enObjetivo = true;
+            myAgent.doDelete();
         }
     }
-    public boolean getenObjetivo(){
-        return enObjetivo;
-    }
-//        public int onEnd() {
-//            if (!enObjetivo) {
-//                myAgent.addBehaviour(new MovimientoSimple(sensores));
-//            }
-//            return super.onEnd();
-//        }
 }

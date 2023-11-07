@@ -13,5 +13,6 @@ class GetInformation extends OneShotBehaviour {
         sensores.setPosiciones( sensores.determinarDireccion());
         System.out.println("El objetivo se encuentra al: "+sensores.getPosiciones());
         System.out.println("Get around: "+sensores.getAround(sensores.getPosiciones()));
+//        System.out.println("DIST MAN: ", sensores.distanciaManhattan());
     }
 }

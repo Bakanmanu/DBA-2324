@@ -29,11 +29,7 @@ class MovimientoComplejo extends OneShotBehaviour {
         }
 
         mejores.addAll(nuevosMejores);
-
-//                    Collections.sort(nuevosMejores, Comparator.comparing(Map.Entry::getValue));
         Collections.sort(mejores, Comparator.comparing(Map.Entry::getValue, Comparator.nullsLast(Comparator.naturalOrder())));
-
-//                        entryList.sort(Comparator.comparing(entry -> entry.getValue(), Comparator.nullsLast(Comparator.naturalOrder())));
 
         for (Map.Entry<POSICIONES,Integer> p : mejores) {
             System.out.println("Opciones: " + p.getKey() + " : " + p.getValue());
@@ -51,11 +47,10 @@ class MovimientoComplejo extends OneShotBehaviour {
 
         }
 
+        assert next_p != null;
         Point last = sensores.actualizarPosicionAgente(sensores.getAgentePos().x + next_p.x, sensores.getAgentePos().y + next_p.y);
         System.out.println("\tActualizando el valor de la celda: " + last);
         System.out.println("\tValor de la celda: " + sensores.getMapa().getValorCelda(last.x, last.y));
-
-//                    sensores.getMapa().setValorCelda(last.x, last.y, sensores.getMapa().getValorCelda(last.x, last.y) + 1);
         sensores.setVision(sensores.see());
 
     }

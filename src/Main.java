@@ -12,7 +12,7 @@ public class Main {
         try {
             System.out.println(Arrays.toString(args));
             Mapa mapa = new Mapa(args[0]);
-            Sensores sensor = new Sensores(mapa, 7, 4, 0,4);
+            Sensores sensor = new Sensores(mapa, 1, 9, 3,9);
             Runtime rt = Runtime.instance();
             Profile profile = new ProfileImpl();
             profile.setParameter(Profile.MAIN_HOST, "localhost");

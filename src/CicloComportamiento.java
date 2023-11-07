@@ -15,7 +15,7 @@ class CicloComportamiento extends TickerBehaviour {
         myAgent.addBehaviour(new GetInformation(sensores));
         VerificarObjetivo verificarObjetivo = new VerificarObjetivo(sensores);
         myAgent.addBehaviour(verificarObjetivo);
-        objetivoEncontrado = verificarObjetivo.getenObjetivo();
+        objetivoEncontrado =
         decisionTomada = objetivoEncontrado;
         System.out.println("OBJ ENCONTRADO" + objetivoEncontrado);
         if(objetivoEncontrado) {

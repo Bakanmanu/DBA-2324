@@ -14,7 +14,7 @@ public class Sensores {
     private Point obj_pos;
 
     private ArrayList<Integer> vision;
-    private ArrayList<POSICIONES> posiciones;
+    private ArrayList<POSICIONES> posiciones; //Posiciones a donde me tengo que mover porque esta el objetivo
 
     public Sensores(Mapa mapa, int agent_f, int agent_c, int obj_f, int obj_c) {
         this.mapa = mapa.clone();
@@ -144,8 +144,6 @@ public class Sensores {
         } else {
             direcciones.add(POSICIONES.IZQUIERDA);
         }
-//        if(Math.abs(agent_pos.x - obj_pos.x) > Math.abs(agent_pos.y - obj_pos.y))
-//            direcciones.reversed();
         return direcciones;
     }
 
