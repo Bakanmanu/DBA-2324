@@ -14,7 +14,7 @@ public class Sensores {
     private Point obj_pos;
 
     private ArrayList<Integer> vision;
-    private ArrayList<POSICIONES> posiciones;
+    private ArrayList<POSICIONES> posiciones; //Posiciones a donde me tengo que mover porque esta el objetivo
 
     public Sensores(Mapa mapa, int agent_f, int agent_c, int obj_f, int obj_c) {
         this.mapa = mapa.clone();
@@ -132,11 +132,12 @@ public class Sensores {
         int distanciaHorizontal = Math.abs(agent_pos.x - obj_pos.x);
         int distanciaVertical = Math.abs(agent_pos.y - obj_pos.y);
         ArrayList<POSICIONES> direcciones = new ArrayList<>();
+
         if (agent_pos.x < obj_pos.x) {
             direcciones.add(POSICIONES.ABAJO);
         } else {
             direcciones.add(POSICIONES.ARRIBA);
-        }/*ROMAN MARICON*/
+        }
         if (agent_pos.y < obj_pos.y) {
             direcciones.add(POSICIONES.DERECHA);
 
