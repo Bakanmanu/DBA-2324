@@ -132,17 +132,20 @@ public class Sensores {
         int distanciaHorizontal = Math.abs(agent_pos.x - obj_pos.x);
         int distanciaVertical = Math.abs(agent_pos.y - obj_pos.y);
         ArrayList<POSICIONES> direcciones = new ArrayList<>();
+
         if (agent_pos.x < obj_pos.x) {
             direcciones.add(POSICIONES.ABAJO);
         } else {
             direcciones.add(POSICIONES.ARRIBA);
-        }/*ROMAN MARICON*/
+        }
         if (agent_pos.y < obj_pos.y) {
             direcciones.add(POSICIONES.DERECHA);
 
         } else {
             direcciones.add(POSICIONES.IZQUIERDA);
         }
+//        if(Math.abs(agent_pos.x - obj_pos.x) > Math.abs(agent_pos.y - obj_pos.y))
+//            direcciones.reversed();
         return direcciones;
     }
 
