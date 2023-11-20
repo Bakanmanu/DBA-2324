@@ -14,7 +14,7 @@ public class Sensores {
     private Point obj_pos;
 
     private ArrayList<Integer> vision;
-    private ArrayList<POSICIONES> posiciones; //Posiciones a donde me tengo que mover porque esta el objetivo
+    private ArrayList<POSICIONES> posiciones; //2 Posiciones a donde me tengo que mover porque esta el objetivo
 
     public Sensores(Mapa mapa, int agent_f, int agent_c, int obj_f, int obj_c) {
         this.mapa = mapa.clone();
@@ -23,11 +23,11 @@ public class Sensores {
         this.obj_pos = new Point(obj_f, obj_c);
         setAgent(agent_pos);
         setObjetivo(obj_pos);
-        memoria.setValorCelda(agent_pos.x, agent_pos.y, 1); // Nada mas aparezco pongo un 1 en la memoria
-        memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO); // Nada mas aparezco pongo un 1 en la memoria
-
+//        memoria.setValorCelda(agent_pos.x, agent_pos.y, 1); // Nada mas aparezco pongo un 1 en la memoria
+        memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO);
         vision = see();
         posiciones = determinarDireccion();
+        compute_man();
     }
 
     Sensores() {
@@ -39,9 +39,11 @@ public class Sensores {
         agent_pos.setLocation(new Point(fila, columna));
         setAgent(agent_pos);
         mapa.setValorCelda(last.x, last.y, 0);
+        compute_man();
         memoria.setValorCelda(agent_pos.x, agent_pos.y, memoria.getValorCelda(agent_pos.x, agent_pos.y)+1);
 
         vision = see();
+
         return last;
     }
 
@@ -92,7 +94,7 @@ public class Sensores {
                 if (i >= 0 && i < filas && j >= 0 && j < columnas) {
                     submatriz.add(memoria.getValorCelda(i, j));
                 } else {
-                    submatriz.add(null);  // Puedes usar otro valor especial si está fuera de la matriz
+                    submatriz.add(null);
                 }
             }
         }
@@ -111,12 +113,9 @@ public class Sensores {
                 case IZQUIERDA -> this.vision.get(3);
                 default -> null;
             });
-
-
         }
-
         return direcciones;
-}
+    }
     public Integer getSimpleAround(POSICIONES p) {
         return switch (p) {
             case ARRIBA -> this.vision.get(1);
@@ -132,15 +131,20 @@ public class Sensores {
         int distanciaHorizontal = Math.abs(agent_pos.x - obj_pos.x);
         int distanciaVertical = Math.abs(agent_pos.y - obj_pos.y);
         ArrayList<POSICIONES> direcciones = new ArrayList<>();
-
+//        if(agent_pos.x == obj_pos.x){
+//            direcciones.add(null);
+//        }else
         if (agent_pos.x < obj_pos.x) {
             direcciones.add(POSICIONES.ABAJO);
         } else {
             direcciones.add(POSICIONES.ARRIBA);
         }
+
+//        if(agent_pos.y == obj_pos.y) {
+//            direcciones.add(null);
+//        }else
         if (agent_pos.y < obj_pos.y) {
             direcciones.add(POSICIONES.DERECHA);
-
         } else {
             direcciones.add(POSICIONES.IZQUIERDA);
         }
@@ -173,8 +177,8 @@ public class Sensores {
                 default -> null;
             };
         }
-        public int distanciaManhattan() {
-                return Math.abs(agent_pos.x - obj_pos.x) + Math.abs(agent_pos.y - obj_pos.y);
+        public int distanciaManhattan(Point pos) {
+                return Math.abs(pos.x - obj_pos.x) + Math.abs(pos.y - obj_pos.y);
         }
 
     public ArrayList<POSICIONES> getPosiciones() {
@@ -184,4 +188,24 @@ public class Sensores {
     public void setPosiciones(ArrayList<POSICIONES> posiciones) {
         this.posiciones = posiciones;
     }
+
+    public void compute_man(){
+        ArrayList<Point> puntos = new ArrayList<>();
+        puntos.add(new Point(0,0));
+        for(POSICIONES p : POSICIONES.values()){
+            puntos.add(getNextPositon(p));
+        }
+
+        for(Point p : puntos){
+            Point curr = new Point(getAgentePos().x + p.x, getAgentePos().y + p.y);
+            Integer dist = distanciaManhattan(curr);
+            Integer cell_value = memoria.getValorCelda(curr.x,curr.y);
+            if(cell_value == 0 && cell_value != null){
+                memoria.setValorCelda(curr.x,curr.y, dist);
+            }
+
+        }
+
+    }
+
 }
