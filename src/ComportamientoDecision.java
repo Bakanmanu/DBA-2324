@@ -1,23 +1,25 @@
 import jade.core.behaviours.OneShotBehaviour;
 
 class ComportamientoDecision extends OneShotBehaviour {
-    private Sensores sensores;
+    private Environment env;
     private boolean decision = false;
-    public ComportamientoDecision(Sensores sensores) {
-        this.sensores = sensores;
+    public ComportamientoDecision(Environment env) {
+        this.env = env;
     }
     @Override
     public void action() {
-        for(int i = 0; i < sensores.getPosiciones().size(); i++) {
-            if (sensores.getAround(sensores.getPosiciones()).get(i) != null){
-                if (sensores.getAround(sensores.getPosiciones()).get(i) == sensores.ID_OBJETIVO) {
-                    myAgent.addBehaviour(new MovimientoSimple(sensores,sensores.getPosiciones().get(i)));
+        for(int i = 0; i < env.getPosiciones().size(); i++) {
+            if (env.getSensores().getAround(env.getPosiciones()).get(i) != null){
+                if (env.getSensores().getAround(env.getPosiciones()).get(i) == env.ID_OBJETIVO) {
+                    myAgent.addBehaviour(new MovimientoSimple(env,env.getPosiciones().get(i)));
                     decision = true;
                 }
             }
         }
         if(!decision){
-            myAgent.addBehaviour(new MovimientoComplejo(sensores));
+            int step_value = env.distanciaManhattan(env.getAgentePos()) -  env.getMemoria().getValorCelda(env.getAgentePos().x, env.getAgentePos().y);
+            System.out.println("Siguiente Paso: " + step_value);
+            myAgent.addBehaviour(new MovimientoComplejo(env, 1));
         }
 
     }

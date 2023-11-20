@@ -1,18 +1,18 @@
 import jade.core.behaviours.OneShotBehaviour;
 
 class GetInformation extends OneShotBehaviour {
-    private Sensores sensores;
+    private Environment env;
 
-    public GetInformation(Sensores sensores){
-        this.sensores = sensores;
+    public GetInformation(Environment env){
+        this.env = env;
     }
     @Override
     public void action() {
-        System.out.println("Posicion del agente:" + sensores.getAgentePos());
-        System.out.println("Posicion del objetivo:" + sensores.getObjetivo());
-        sensores.setPosiciones( sensores.determinarDireccion());
-        System.out.println("El objetivo se encuentra al: "+sensores.getPosiciones());
-        System.out.println("Get around: "+sensores.getAround(sensores.getPosiciones()));
-//        System.out.println("DIST MAN: ", sensores.distanciaManhattan());
+        System.out.println("Posicion del agente:" + env.getAgentePos());
+        System.out.println("Posicion del objetivo:" + env.getObjetivo());
+        env.setPosiciones( env.determinarDireccion());
+        System.out.println("El objetivo se encuentra al: "+env.getPosiciones());
+        System.out.println("Get around: "+env.getSensores().getAround(env.getPosiciones()));
+//        System.out.println("DIST MAN: ", env.distanciaManhattan());
     }
 }

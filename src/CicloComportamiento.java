@@ -2,27 +2,25 @@ import jade.core.behaviours.TickerBehaviour;
 
 class CicloComportamiento extends TickerBehaviour {
     private boolean decisionTomada = false;
-    private Sensores sensores;
+    private Environment env;
+
     static private int num_steps = 0;
 
-    public CicloComportamiento(Sensores sensores) {
+    public CicloComportamiento(Environment env) {
         super(null, 1000); // Establece la frecuencia de ejecución en milisegundos
-        this.sensores = sensores;
+        this.env = env;
     }
 
     protected void onTick() {
-        myAgent.addBehaviour(new MostrarMapa(sensores));
-        myAgent.addBehaviour(new GetInformation(sensores));
-        VerificarObjetivo verificarObjetivo = new VerificarObjetivo(sensores);
+        myAgent.addBehaviour(new MostrarMapa(env));
+        myAgent.addBehaviour(new GetInformation(env));
+        VerificarObjetivo verificarObjetivo = new VerificarObjetivo(env, num_steps);
         myAgent.addBehaviour(verificarObjetivo);
 
         if (!decisionTomada) {
-            myAgent.addBehaviour(new ComportamientoDecision(sensores));
+            myAgent.addBehaviour(new ComportamientoDecision(env));
         }
         num_steps++;
-    }
 
-    public int getNum_steps(){
-        return num_steps;
     }
 }
