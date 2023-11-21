@@ -1,6 +1,6 @@
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.CyclicBehaviour;
 
-class GetInformation extends OneShotBehaviour {
+class GetInformation extends CyclicBehaviour {
     private Environment env;
 
     public GetInformation(Environment env){

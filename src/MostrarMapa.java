@@ -1,6 +1,6 @@
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.CyclicBehaviour;
 
-class MostrarMapa extends OneShotBehaviour {
+class MostrarMapa extends CyclicBehaviour {
     private Environment env;
 
     public MostrarMapa(Environment env) {

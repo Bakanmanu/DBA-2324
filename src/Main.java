@@ -9,33 +9,30 @@ import java.awt.*;
 import java.beans.Encoder;
 import java.util.Arrays;
 
+import static java.lang.Thread.sleep;
+
 
 public class Main {
     public static void main(String[] args) {
         try {
-//            System.out.println(Arrays.toString(args));
-//            Mapa mapa = new Mapa(args[0]);
-//            Point agent_pos = new Point(0, 0);
-//            Point obj_pos = new Point(7, 7);
-//
-//            Sensores sensor = new Sensores(mapa, agent_pos);
-//            Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y, obj_pos.x, obj_pos.y);
-//            Runtime rt = Runtime.instance();
-//            Profile profile = new ProfileImpl();
-//            profile.setParameter(Profile.MAIN_HOST, "localhost");
-//            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
-//            ContainerController container = rt.createMainContainer(profile);
-//            AgentController agent = container.createNewAgent("ComportamientoAgente", ComportamientoAgente.class.getName(), new Object[]{env});
-//            agent.start();
-            run();
+            System.out.println(Arrays.toString(args));
+
+            Runtime rt = Runtime.instance();
+            Profile profile = new ProfileImpl();
+            profile.setParameter(Profile.MAIN_HOST, "localhost");
+            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
+            ContainerController container = rt.createMainContainer(profile);
+
+            run(container);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void run() {
+    public static void run(ContainerController container) {
         try {
+
             String[] mapFiles = {
                     "maps/mapa.txt",
                     "maps/mapaJodio.txt",
@@ -48,30 +45,45 @@ public class Main {
                     "maps/mapWithVerticalWall.txt"
             };
 
-            Runtime rt = Runtime.instance();
-            Profile profile = new ProfileImpl();
-            profile.setParameter(Profile.MAIN_HOST, "localhost");
-            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
-            ContainerController container = rt.createMainContainer(profile);
+//            Runtime rt = Runtime.instance();
+//            Profile profile = new ProfileImpl();
+//            profile.setParameter(Profile.MAIN_HOST, "localhost");
+//            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
+//            ContainerController container = rt.createMainContainer(profile);
 
             for (String mapFile : mapFiles) {
-                runAgent( mapFile);
+                Mapa mapa = new Mapa(mapFile);
+                Point agent_pos = new Point(0, 0);
+                Point obj_pos = new Point(7, 7);
+
+                Sensores sensor = new Sensores(mapa, agent_pos);
+                Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y, obj_pos.x, obj_pos.y);
+                AgentController agent = container.createNewAgent("ComportamientoAgente", ComportamientoAgente.class.getName(), new Object[]{env});
+                agent.start();
+//                runAgent( mapFile, container);
+
+                sleep(5000);
+
             }
 
 
         } catch (Error e) {
             throw new RuntimeException(e);
+        } catch (StaleProxyException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
-    private static void runAgent(String mapFile) {
+    private static void runAgent(String mapFile, ContainerController container) {
         try {
-            Runtime rt = Runtime.instance();
-            Profile profile = new ProfileImpl();
-            profile.setParameter(Profile.MAIN_HOST, "localhost");
-            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
-            ContainerController container = rt.createMainContainer(profile);
+//            Runtime rt = Runtime.instance();
+//            Profile profile = new ProfileImpl();
+//            profile.setParameter(Profile.MAIN_HOST, "localhost");
+//            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
+//            ContainerController container = rt.createMainContainer(profile);
 
             Mapa mapa = new Mapa(mapFile);
             Point agent_pos = new Point(0, 0);
@@ -85,7 +97,7 @@ public class Main {
 
             // Espera hasta que el agente termine (puedes agregar lógica de espera más robusta)
             while (!agent.getState().equals("Deleted")) {
-                Thread.sleep(100);
+                sleep(100);
             }
 
             // Detén el contenedor antes de reiniciar para limpiar el entorno

@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Environment {
 
@@ -102,6 +103,9 @@ public class Environment {
             direcciones.add(POSICIONES.DERECHA);
         } else {
             direcciones.add(POSICIONES.IZQUIERDA);
+        }
+        if (distanciaHorizontal > distanciaVertical){
+            Collections.reverse(direcciones);
         }
         return direcciones;
     }
