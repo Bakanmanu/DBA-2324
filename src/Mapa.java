@@ -2,17 +2,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Mapa implements Cloneable {
     private ArrayList<ArrayList<Integer>> matriz;
 
     public Mapa(String archivoMapa) {
         cargarMapaDesdeArchivo(archivoMapa);
-    }
-
-    Mapa() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     private void cargarMapaDesdeArchivo(String archivoMapa) {
@@ -36,7 +31,7 @@ public class Mapa implements Cloneable {
                 matriz.add(fila);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
