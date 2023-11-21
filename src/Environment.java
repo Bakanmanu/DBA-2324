@@ -1,6 +1,8 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Environment {
 
     final int ID_AGENTE = -9;
@@ -12,12 +14,6 @@ public class Environment {
     private Mapa mapa;
     private Mapa memoria;
     private ArrayList<POSICIONES> posiciones; //2 Posiciones a donde me tengo que mover porque esta el objetivo
-
-
-
-    Environment() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
     public Environment(Mapa mapa,Sensores sensores, int agent_f, int agent_c, int obj_f, int obj_c) {
         this.mapa = mapa.clone();
@@ -44,10 +40,6 @@ public class Environment {
 
     public Sensores getSensores(){
         return this.sensores;
-    }
-
-    public void setSensores(Sensores s){
-        this.sensores = s;
     }
 
     public Point actualizarPosicionAgente(int fila, int columna, int step) {
@@ -103,6 +95,10 @@ public class Environment {
         } else {
             direcciones.add(POSICIONES.IZQUIERDA);
         }
+
+        if (distanciaHorizontal < distanciaVertical){
+            Collections.reverse(direcciones);
+        }
         return direcciones;
     }
 
@@ -121,15 +117,14 @@ public class Environment {
     //                No explorado = 0
     //                Ya visitado > 1
     //                null
-    // Devuelve la posicion de la celda de al lado del agente en la direccion especificada
-    // Mas que posicion es la direccion, fiajte en los Points, es una suma de la
+    // Devuelve la posición de la celda de al lado del agente en la dirección especificada
+    // Mas que posición es la dirección, fíjate en los Points, es una suma de la
     public Point getNextPositon(POSICIONES p) {
         return switch (p) {
             case ARRIBA -> new Point(-1, 0);
             case ABAJO -> new Point(1, 0);
             case DERECHA -> new Point(0, 1);
             case IZQUIERDA -> new Point(0, -1);
-            default -> null;
         };
     }
     public int distanciaManhattan(Point pos) {
@@ -146,8 +141,8 @@ public class Environment {
         for(Point p : puntos){
             Point curr = new Point(getAgentePos().x + p.x, getAgentePos().y + p.y);
             int dist = distanciaManhattan(curr);
-            Integer cell_value = memoria.getValorCelda(curr.x,curr.y);
-            if(cell_value == 0 && cell_value != null){
+            int cell_value = memoria.getValorCelda(curr.x,curr.y);
+            if(cell_value == 0 /*&& cell_value != null*/){
                 memoria.setValorCelda(curr.x,curr.y, dist);
             }
 
@@ -155,21 +150,3 @@ public class Environment {
 
     }
 }
-
-
-
-/*
-Clase Planteamiento:Sensores qombre de es que asi usamos siglas y es mas  Ncomodo)?eAbajo S
-
-Clase Enviroment:
-    - :MAPA              ¿Mapa origina  ?
-    - MEMORIA          ¿mapa del cami   n- POS_AGENTE   int fil int col //renta hacer una clase/struct posicion que guarde in fil int col
-    - POS_OBJ       int fil int col
-    - GetNexPosition()
-        - Si
-
-Clase Agente:
-    -()()()Comportamiento Iniciar
--Comportamiento buscar objetivo
--Comportamiento ObjetivoAlcanzado
-*/

@@ -1,7 +1,7 @@
 import jade.core.behaviours.OneShotBehaviour;
 
 class MostrarMapa extends OneShotBehaviour {
-    private Environment env;
+    private final Environment env;
 
     public MostrarMapa(Environment env) {
         this.env = env;

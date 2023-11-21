@@ -1,5 +1,6 @@
 import jade.core.behaviours.OneShotBehaviour;
 
+@SuppressWarnings("FieldMayBeFinal")
 class GetInformation extends OneShotBehaviour {
     private Environment env;
 
@@ -13,6 +14,5 @@ class GetInformation extends OneShotBehaviour {
         env.setPosiciones( env.determinarDireccion());
         System.out.println("El objetivo se encuentra al: "+env.getPosiciones());
         System.out.println("Get around: "+env.getSensores().getAround(env.getPosiciones()));
-//        System.out.println("DIST MAN: ", env.distanciaManhattan());
     }
 }

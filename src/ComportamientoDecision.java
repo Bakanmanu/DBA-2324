@@ -1,11 +1,19 @@
 import jade.core.behaviours.OneShotBehaviour;
 
+
+@SuppressWarnings("FieldMayBeFinal")
+
+/**
+ * Clase que toma la decicion sobre cual es el mejor movimiento que realizar, podemos buscar a nuestro alrededor y si encuentra
+ * el objetivo, entonces realizare el movimiento simple hacia esa posicion, en caso contrario, tendre que pensar cual sera el mejor movimiento
+ */
 class ComportamientoDecision extends OneShotBehaviour {
     private Environment env;
     private boolean decision = false;
     public ComportamientoDecision(Environment env) {
         this.env = env;
     }
+
     @Override
     public void action() {
         for(int i = 0; i < env.getPosiciones().size(); i++) {
@@ -17,9 +25,7 @@ class ComportamientoDecision extends OneShotBehaviour {
             }
         }
         if(!decision){
-            int step_value = env.distanciaManhattan(env.getAgentePos()) -  env.getMemoria().getValorCelda(env.getAgentePos().x, env.getAgentePos().y);
-            System.out.println("Siguiente Paso: " + step_value);
-            myAgent.addBehaviour(new MovimientoComplejo(env, 1));
+            myAgent.addBehaviour(new MovimientoComplejo(env));
         }
 
     }

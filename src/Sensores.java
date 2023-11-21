@@ -7,9 +7,7 @@ public class Sensores {
     public Sensores(Mapa memoria, Point agent_pos) {
         see(agent_pos, memoria);
     }
-    Sensores() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+
     public ArrayList<Integer> getVision(){
         return vision;
     }
@@ -47,7 +45,6 @@ public class Sensores {
                 case ABAJO -> this.vision.get(7);
                 case DERECHA -> this.vision.get(5);
                 case IZQUIERDA -> this.vision.get(3);
-                default -> null;
             });
         }
         return direcciones;
@@ -58,7 +55,6 @@ public class Sensores {
             case ABAJO -> this.vision.get(7);
             case DERECHA -> this.vision.get(5);
             case IZQUIERDA -> this.vision.get(3);
-            default -> null;
         };
     }
 }
