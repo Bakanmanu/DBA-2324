@@ -1,17 +1,17 @@
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.CyclicBehaviour;
 
-class MostrarMapa extends OneShotBehaviour {
-    private Sensores sensores;
+class MostrarMapa extends CyclicBehaviour {
+    private Environment env;
 
-    public MostrarMapa(Sensores sensores) {
-        this.sensores = sensores;
+    public MostrarMapa(Environment env) {
+        this.env = env;
     }
 
     public void action() {
         System.out.println("Mostrando mapa:");
-        sensores.getMapa().mostrarMapa();
+        env.getMapa().mostrarMapa();
         System.out.println("---------------------------------------------");
-        sensores.getMemoria().mostrarMapa();
+        env.getMemoria().mostrarMapa();
         System.out.println("---------------------------------------------");
     }
 }

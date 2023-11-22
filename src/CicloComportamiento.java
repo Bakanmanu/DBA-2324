@@ -1,28 +1,29 @@
 import jade.core.behaviours.TickerBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.SequentialBehaviour;
 
-class CicloComportamiento extends TickerBehaviour {
+class CicloComportamiento extends OneShotBehaviour {
     private boolean decisionTomada = false;
-    private Sensores sensores;
+    private Environment env;
+
     static private int num_steps = 0;
 
-    public CicloComportamiento(Sensores sensores) {
-        super(null, 1000); // Establece la frecuencia de ejecución en milisegundos
-        this.sensores = sensores;
+    public CicloComportamiento(Environment env) {
+        this.env = env;
     }
 
-    protected void onTick() {
-        myAgent.addBehaviour(new MostrarMapa(sensores));
-        myAgent.addBehaviour(new GetInformation(sensores));
-        VerificarObjetivo verificarObjetivo = new VerificarObjetivo(sensores);
+    @Override
+    public void action() {
+        System.out.println("Inicializando ciclos");
+        myAgent.addBehaviour(new MostrarMapa(env));
+        myAgent.addBehaviour(new GetInformation(env));
+        VerificarObjetivo verificarObjetivo = new VerificarObjetivo(env);
         myAgent.addBehaviour(verificarObjetivo);
 
-        if (!decisionTomada) {
-            myAgent.addBehaviour(new ComportamientoDecision(sensores));
-        }
-        num_steps++;
-    }
+        myAgent.addBehaviour(new ComportamientoDecision(env));
+//        if (!decisionTomada) {
+//        }
+//        num_steps++;
 
-    public int getNum_steps(){
-        return num_steps;
     }
 }
