@@ -1,7 +1,4 @@
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -10,12 +7,10 @@ import static java.lang.Thread.sleep;
 
 class MovimientoComplejo extends CyclicBehaviour {
     private Environment env;
-    private int step_value;
     boolean decision = false;
-    public MovimientoComplejo(Environment env, int step){
-        this.env = env;
-        this.step_value = step;
 
+    public MovimientoComplejo(Environment env){
+        this.env = env;
     }
     @Override
     public void action() {
@@ -50,8 +45,7 @@ class MovimientoComplejo extends CyclicBehaviour {
             List<Map.Entry<POSICIONES, Integer>> nuevosMejores = new ArrayList<>();
 
             // Ahora meto los otros movimientos posibles
-            for (Iterator<Map.Entry<POSICIONES, Integer>> iterator = mejores.iterator(); iterator.hasNext(); ) {
-                Map.Entry<POSICIONES, Integer> p = iterator.next();
+            for (Map.Entry<POSICIONES, Integer> p : mejores) {
                 nuevosMejores.add(new AbstractMap.SimpleEntry<>(env.opposite(p.getKey()), env.getSensores().getSimpleAround(env.opposite(p.getKey()))));
             }
 
@@ -63,12 +57,12 @@ class MovimientoComplejo extends CyclicBehaviour {
                 System.out.println("Opciones: " + p.getKey() + " : " + p.getValue());
             }
 
-            // Escogo la mejor opcion y que sea valida
+            // Escojo la mejor opcion y que sea valida
             for (Map.Entry<POSICIONES, Integer> entry : mejores) {
                 POSICIONES key = entry.getKey();
                 Integer value = entry.getValue();
 
-                if (value >= 0 /*&& key != env.opposite(posiciones)*/) {
+                if (value >= 0) {
                     System.out.println("Escogida :" + key + " : " + value);
                     next_p = env.getNextPositon(key);
                     System.out.println("Siguiente posicion2: " + key);
@@ -76,21 +70,18 @@ class MovimientoComplejo extends CyclicBehaviour {
                 }
 
             }
-
             // Me muevo hacia alli
             assert next_p != null;
-
-            Point last = env.actualizarPosicionAgente(env.getAgentePos().x + next_p.x, env.getAgentePos().y + next_p.y, step_value);
+            Point last = env.actualizarPosicionAgente(env.getAgentePos().x + next_p.x, env.getAgentePos().y + next_p.y, 1);
             System.out.println("\tActualizando el valor de la celda: " + last);
             System.out.println("\tValor de la celda: " + env.getMapa().getValorCelda(last.x, last.y));
             env.getSensores().setVision(env.getSensores().see(env.getAgentePos(), env.getMemoria()));
+        }
 
-
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
-
-//    @Override
-//    public boolean done() {
-//        return true;
-//    }
 }
