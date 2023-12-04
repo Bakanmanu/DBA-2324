@@ -6,6 +6,8 @@ Grupo 202 compuesto por:
 - Carlos Román Álvarez
 - Manuel Zafra Mota
 
+---
+
 ## P2 - Movimiento de un agente en un mundo bidimensional
 
 ## P3 - Comunicacion entre agentes
