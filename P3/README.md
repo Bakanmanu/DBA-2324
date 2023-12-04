@@ -1,6 +1,6 @@
-# P��actic 3
+# Práctica 3
 
-En esta carpeta se desarrollará la 3�ª practica de DBA
+En esta carpeta se desarrollará la 3ª práctica de DBA
 
 
 
