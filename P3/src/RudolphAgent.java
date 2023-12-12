@@ -42,7 +42,10 @@ public class RudolphAgent extends Agent {
                     ACLMessage reply = msg.createReply();
                     if (receivedCode.equals(secretCode)) {
                         reply.setPerformative(ACLMessage.AGREE);
-                        reply.setContent(getNextCoordenadaReno().toString());
+                        Point pos = getNextCoordenadaReno();
+                        assert pos != null;
+                        String to_send = pos.x + "," + pos.y;
+                        reply.setContent(to_send);
                     } else {
                         reply.setPerformative(ACLMessage.REFUSE);
                     }
