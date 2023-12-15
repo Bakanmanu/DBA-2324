@@ -30,8 +30,6 @@ public class Environment {
      * @param sensores Sensores utilizados por el agente.
      * @param agent_f Fila inicial del agente.
      * @param agent_c Columna inicial del agente.
-     * @param obj_f Fila del objetivo.
-     * @param obj_c Columna del objetivo.
      */
     public Environment(Mapa mapa,Sensores sensores, int agent_f, int agent_c) {
         this.mapa = mapa.clone();
@@ -226,5 +224,4 @@ public class Environment {
             }
         }
     }
-
 }
