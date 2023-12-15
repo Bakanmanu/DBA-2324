@@ -33,18 +33,17 @@ public class Environment {
      * @param obj_f Fila del objetivo.
      * @param obj_c Columna del objetivo.
      */
-    public Environment(Mapa mapa,Sensores sensores, int agent_f, int agent_c, int obj_f, int obj_c) {
+    public Environment(Mapa mapa,Sensores sensores, int agent_f, int agent_c) {
         this.mapa = mapa.clone();
         this.sensores = sensores;
         this.memoria = mapa.clone();
         this.agent_pos = new Point(agent_f, agent_c);
-        this.obj_pos = new Point(obj_f, obj_c);
+        // this.obj_pos = new Point(obj_f, obj_c);
         setAgent(agent_pos);
-        setObjetivo(obj_pos);
-        memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO);
+        // setObjetivo(obj_pos);
+// memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO);
         sensores.see(agent_pos, memoria);
-        posiciones = determinarDireccion();
-        compute_man();
+        //
     }
 
     public ArrayList<POSICIONES> getPosiciones() {
@@ -87,7 +86,13 @@ public class Environment {
     }
 
     public void setObjetivo(Point p) {
+        obj_pos = p;
         mapa.setValorCelda(p.x, p.y, ID_OBJETIVO);
+
+        this.memoria = mapa.clone();
+        memoria.setValorCelda(obj_pos.x, obj_pos.y, ID_OBJETIVO);
+        posiciones = determinarDireccion();
+        compute_man();
     }
 
     public Point getObjetivo() {

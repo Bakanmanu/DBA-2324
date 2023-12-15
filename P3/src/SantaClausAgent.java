@@ -28,6 +28,10 @@ public class SantaClausAgent extends Agent {
                         send(reply);
                     }
                 }
+
+                if (msg.getPerformative() == ACLMessage.INFORM) {
+
+                }
             }
         });
     }

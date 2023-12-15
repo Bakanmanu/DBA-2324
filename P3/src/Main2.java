@@ -26,16 +26,17 @@ public class Main2 {
             Point obj_pos = new Point(7, 7);
 
             Sensores sensor = new Sensores(mapa, agent_pos);
-            Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y, obj_pos.x, obj_pos.y);
+            Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y);
+
 
             // Lanzar agentes
             AgentController santaClausController = container.createNewAgent("SantaClaus", SantaClausAgent.class.getName(), null);
-            santaClausController.start();
-
             AgentController rudolphController = container.createNewAgent("Rudolph", RudolphAgent.class.getName(), new Object[]{coords});
-            rudolphController.start();
-
             AgentController buscadorController = container.createNewAgent("Buscador", BuscadorAgent.class.getName(), new Object[]{env});
+
+
+            santaClausController.start();
+            rudolphController.start();
             buscadorController.start();
 
         } catch (Exception e) {

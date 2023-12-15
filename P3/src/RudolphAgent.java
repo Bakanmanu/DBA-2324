@@ -23,6 +23,7 @@ public class RudolphAgent extends Agent {
             doDelete(); // Eliminar el agente si los argumentos no son válidos
         }
         addBehaviour(new CyclicBehaviour(this) {
+
             public void action() {
                 ACLMessage msg = blockingReceive();
                 if (msg.getPerformative() == ACLMessage.REQUEST) {
@@ -37,7 +38,6 @@ public class RudolphAgent extends Agent {
                 }
 
                 if(msg.getPerformative() == ACLMessage.CFP){
-                    System.out.println("Recive");
                     String receivedCode = msg.getConversationId();
                     ACLMessage reply = msg.createReply();
                     if (receivedCode.equals(secretCode)) {
