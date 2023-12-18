@@ -113,34 +113,6 @@ public class BuscadorAgent extends Agent {
         }
     }
 
-    private void searchReindeers() {
-        System.out.println("Buscando renos");
-        // Preguntar a Rudolph por las coordenadas de los renos
-        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-        msg.addReceiver(getAID("Rudolph"));  // Ajusta esto según el nombre del agente Rudolph
-        msg.setConversationId(secretCode);  // Usa el código secreto proporcionado por Santa Claus
-        send(msg);
-
-        ACLMessage reply = blockingReceive();
-        if (reply.getPerformative() == ACLMessage.INFORM) {
-
-            System.out.println(reply.getContent());
-            String[] coords = reply.getContent().split(",");
-
-            Point reno = new Point(Integer.parseInt(coords[0]),Integer.parseInt(coords[1]));
-            System.out.println("Reno en la pos:" + reno);
-
-            env.setObjetivo(reno);
-
-            addBehaviour(new MostrarMapa(env));
-            addBehaviour(new GetInformation(env));
-            addBehaviour(new VerificarObjetivo(env));
-            addBehaviour(new Movimiento(env));
-
-        }
-
-    }
-
     private void informRenoSanta(ACLMessage msg) {
 
     }
