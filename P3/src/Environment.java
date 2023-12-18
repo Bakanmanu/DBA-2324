@@ -85,6 +85,7 @@ public class Environment {
 
     public void setObjetivo(Point p) {
         obj_pos = p;
+        System.out.println(obj_pos.toString());
         mapa.setValorCelda(p.x, p.y, ID_OBJETIVO);
 
         this.memoria = mapa.clone();
@@ -210,7 +211,7 @@ public class Environment {
 
         // Itera sobre cada punto y calcula la distancia de Manhattan
         for(Point p : puntos){
-            // Calcula la posición actual sumando el punto ala posición del agente
+            // Calcula la posición actual sumando el punto a la posición del agente
             Point curr = new Point(getAgentePos().x + p.x, getAgentePos().y + p.y);
 
             // Calcula la distancia de Manhattan desde la posición actual hasta el objeto

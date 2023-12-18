@@ -26,6 +26,8 @@ class Movimiento extends CyclicBehaviour {
      */
     @Override
     public void action() {
+        BuscadorAgent miAgente = (BuscadorAgent) myAgent;
+
         for(int i = 0; i < env.getPosiciones().size(); i++) {
             if (env.getSensores().getAround(env.getPosiciones()).get(i) != null){
                 if (env.getSensores().getAround(env.getPosiciones()).get(i) == env.ID_OBJETIVO) {
@@ -38,12 +40,14 @@ class Movimiento extends CyclicBehaviour {
 
                     Point last = env.actualizarPosicionAgente(env.getAgentePos().x + next_p.x, env.getAgentePos().y + next_p.y,1);
                     env.getSensores().setVision(env.getSensores().see(env.getAgentePos(), env.getMemoria()));
-                    decision = true;
+
+                    miAgente.setDecisionMov(true);
+
                 }
             }
         }
 
-        if (!decision) {
+        if (!miAgente.isDecisionMov()) {
             System.out.println("------------------ Movimiento en busca del objetivo------------------");
 
             Point next_p = null;

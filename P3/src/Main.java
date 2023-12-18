@@ -44,7 +44,7 @@ public class Main {
 //                    "maps/mapWithComplexObstacle3.txt",
 //                    "maps/mapWithDiagonalWall.txt"
 //                    "maps/mapWithHorizontalWall.txt",
-//                    "maps/mapWithoutObstacle.txt",
+//                    "maps/mapWithoutObstacleP3.txt",
 //                    "maps/mapWithVerticalWall.txt"
                     "maps/mapComplex.txt"
             };

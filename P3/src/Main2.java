@@ -19,7 +19,12 @@ public class Main2 {
             ArrayList<Point> coords = new ArrayList<>();
             coords.add(new Point(8,5));
             coords.add(new Point(1,1));
-            coords.add(new Point(2,2));
+            coords.add(new Point(2,5));
+
+//            coords.add(new Point(31,18));
+//            coords.add(new Point(22,22));
+//            coords.add(new Point(0,0));
+//            coords.add(new Point(39,39));
 
             Mapa mapa = new Mapa(args[0]);
             Point agent_pos = new Point(0, 0);

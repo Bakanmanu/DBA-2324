@@ -2,13 +2,16 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.awt.*;
 import java.util.Random;
 
 public class SantaClausAgent extends Agent {
+    private Point  santa_pos = new Point(33,33);
     private boolean isAgentTrusted(String agentName) {
         // Lógica para determinar si un agente es confiable
         Random random = new Random();
-        return random.nextDouble() <= 0.8; // 80% de confiabilidad
+        // return random.nextDouble() <= 0.8; // 80% de confiabilidad
+        return true;
     }
 
     protected void setup() {

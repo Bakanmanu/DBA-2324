@@ -1,20 +1,28 @@
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.SequentialBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
-import jade.proto.states.ReplySender;
-import jade.wrapper.AgentController;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BuscadorAgent extends Agent {
-    private String secretCode;
+    private String secretCode=null;
 
+    private boolean renoEncontrado = true;  // Ajuste para el comportamiento de ObtenerPosReno
 
+    private boolean decisionMov = false; // Decision del movimiento tomada
 
+    public int getIdReno() {
+        return idReno;
+    }
+
+    public void setIdReno(int idReno) {
+        this.idReno = idReno;
+    }
+
+    private int idReno = -1;      // id del reno encontrado
+    private ArrayList<String> nameRenos = new ArrayList<>(Arrays.asList("Dasher", "Dancer", "Prancer", "Vixen","Comet", "Cupid", "Donner", "Blitzen"));
     private Point agent_pos = new Point(0,0);
     private Environment env;
     private Mapa mapa;
@@ -38,33 +46,29 @@ public class BuscadorAgent extends Agent {
         doDelete(); // Eliminar el agente si los argumentos no son válidos
     }
 
-        // Inicialización y presentación a Santa Claus ONESHOT
-        secretCode = null;
-        presentToSanta();
+        // Inicio Comms
+        addBehaviour(new PresentToSanta());
+        addBehaviour(new establecerComunicacionRudolf());
 
-        // Lógica principal ONE SHOT
+    // Comienza ciclo busqueda
 
-        addBehaviour(new OneShotBehaviour(this) {
-            public void action() {
-                // Establecer canal de comunicación seguro con Rudolph
-                establishSecureCommunication();
-            }
-        });
-        // Cyclic
-        addBehaviour(new BusquedaReno()
-//            new CyclicBehaviour(this) {
-//            private ACLMessage msg;
-//            public void action() {
-//                // Búsqueda de renos con Rudolph
-//                searchReindeers();
-//            }}
-        );
-        //cyclic
+        // Obtencion posicion reno
+        addBehaviour(new ObtenerPosReno());
+
+        // Ciclo de busqueda cada reno
+        addBehaviour(new MostrarMapa(getEnv()));
+        addBehaviour(new GetInformation(getEnv()));
+        addBehaviour(new Movimiento(getEnv()));
+        addBehaviour(new VerificarObjetivo(getEnv()));
+
+
         addBehaviour(new CyclicBehaviour(this) {
             public void action() {
-                System.out.println("Comunicacion con Santa.");
-                // Comunicación con Santa Claus nuevamente
-                //communicateWithSanta();
+                if(renoEncontrado){
+                    System.out.println("¡Santa, encontré a "+ nameRenos.get(idReno)+"!");
+                    // Comunicación con Santa Claus nuevamente
+                    //communicateWithSanta();
+                }
             }
         });
     }
@@ -74,44 +78,30 @@ public class BuscadorAgent extends Agent {
         return secretCode;
     }
 
+    public void setSecretCode(String secretCode) {
+        this.secretCode = secretCode;
+    }
+
     public Environment getEnv() {
         return env;
     }
 
-    private void presentToSanta() {
-        ACLMessage proposal = new ACLMessage(ACLMessage.PROPOSE);
-        proposal.addReceiver(getAID("SantaClaus"));
-        send(proposal);
-
-        ACLMessage reply = blockingReceive();
-        if (reply.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-            secretCode = reply.getContent();
-            System.out.println("SANTA CLAUS NOS ACEPTA Y NOS DA EL CODIGO  :).");
-        } else {
-            System.out.println("SANTA CLAUS NOS HA RECHAZADO :( ");
-            doDelete();
-        }
+    public boolean isRenoEncontrado() {
+        return renoEncontrado;
     }
 
-    /**
-     * Establece comunicacion con rudolph, mandando el cod. secreto,
-     * si es el mismo que tiene rudolph hemos establecido la conexion segura
-     * si no lo es, finalizamos el agente
-     */
-    private void establishSecureCommunication() {
-        ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-        request.addReceiver(getAID("Rudolph"));
-        request.setContent(secretCode);
-        send(request);
-
-        ACLMessage reply = blockingReceive();
-        if (reply.getPerformative() == ACLMessage.AGREE) {
-            System.out.println("COMUNICACION SEGURA CON RUDOLPH.  :)");
-        } else {
-            System.out.println("NO HAY COMUNICACION CON RUDOLPH!  :(");
-            doDelete();
-        }
+    public void setRenoEncontrado(boolean renoEncontrado) {
+        this.renoEncontrado = renoEncontrado;
     }
+
+    public boolean isDecisionMov() {
+        return decisionMov;
+    }
+
+    public void setDecisionMov(boolean decisionMov) {
+        this.decisionMov = decisionMov;
+    }
+
 
     private void informRenoSanta(ACLMessage msg) {
 
@@ -121,7 +111,7 @@ public class BuscadorAgent extends Agent {
 
     }
 
-    private void informAllRenoSanta(){
+    private void requestAllRenoSanta(){
 
     }
 }
