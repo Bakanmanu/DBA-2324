@@ -3,6 +3,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.proto.states.ReplySender;
 import jade.wrapper.AgentController;
 
 import java.awt.*;
@@ -11,11 +12,15 @@ import java.util.Arrays;
 
 public class BuscadorAgent extends Agent {
     private String secretCode;
+
+
+
     private Point agent_pos = new Point(0,0);
     private Environment env;
     private Mapa mapa;
     private Sensores sensor;
 
+    private ACLMessage mensaje;     // Para evitar crear mensajes constantemente, utilizamos el mismo y lo vamos cambiando cada vez
 
     protected void setup() {
 
@@ -38,29 +43,39 @@ public class BuscadorAgent extends Agent {
         presentToSanta();
 
         // Lógica principal ONE SHOT
-        SequentialBehaviour seq = new SequentialBehaviour();
-        seq.addSubBehaviour(new OneShotBehaviour(this) {
+
+        addBehaviour(new OneShotBehaviour(this) {
             public void action() {
                 // Establecer canal de comunicación seguro con Rudolph
                 establishSecureCommunication();
             }
         });
         // Cyclic
-        seq.addSubBehaviour(new CyclicBehaviour(this) {
+        addBehaviour(new BusquedaReno()
+//            new CyclicBehaviour(this) {
+//            private ACLMessage msg;
+//            public void action() {
+//                // Búsqueda de renos con Rudolph
+//                searchReindeers();
+//            }}
+        );
+        //cyclic
+        addBehaviour(new CyclicBehaviour(this) {
             public void action() {
-                // Búsqueda de renos con Rudolph
-                searchReindeers();
-            }
-        });
-        //cy
-        seq.addSubBehaviour(new CyclicBehaviour(this) {
-            public void action() {
+                System.out.println("Comunicacion con Santa.");
                 // Comunicación con Santa Claus nuevamente
-                communicateWithSanta();
+                //communicateWithSanta();
             }
         });
+    }
 
-        addBehaviour(seq);
+
+    public String getSecretCode() {
+        return secretCode;
+    }
+
+    public Environment getEnv() {
+        return env;
     }
 
     private void presentToSanta() {
@@ -78,6 +93,11 @@ public class BuscadorAgent extends Agent {
         }
     }
 
+    /**
+     * Establece comunicacion con rudolph, mandando el cod. secreto,
+     * si es el mismo que tiene rudolph hemos establecido la conexion segura
+     * si no lo es, finalizamos el agente
+     */
     private void establishSecureCommunication() {
         ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
         request.addReceiver(getAID("Rudolph"));
@@ -96,31 +116,40 @@ public class BuscadorAgent extends Agent {
     private void searchReindeers() {
         System.out.println("Buscando renos");
         // Preguntar a Rudolph por las coordenadas de los renos
-        ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         msg.addReceiver(getAID("Rudolph"));  // Ajusta esto según el nombre del agente Rudolph
         msg.setConversationId(secretCode);  // Usa el código secreto proporcionado por Santa Claus
         send(msg);
 
         ACLMessage reply = blockingReceive();
-        if (reply.getPerformative() == ACLMessage.AGREE) {
+        if (reply.getPerformative() == ACLMessage.INFORM) {
+
             System.out.println(reply.getContent());
             String[] coords = reply.getContent().split(",");
+
             Point reno = new Point(Integer.parseInt(coords[0]),Integer.parseInt(coords[1]));
             System.out.println("Reno en la pos:" + reno);
+
             env.setObjetivo(reno);
+
             addBehaviour(new MostrarMapa(env));
             addBehaviour(new GetInformation(env));
             addBehaviour(new VerificarObjetivo(env));
             addBehaviour(new Movimiento(env));
 
-
         }
-
-
 
     }
 
-    private void communicateWithSanta() {
-        // Implementar la lógica de comunicación con Santa Claus
+    private void informRenoSanta(ACLMessage msg) {
+
+    }
+
+    private void askLocationSanta() {
+
+    }
+
+    private void informAllRenoSanta(){
+
     }
 }

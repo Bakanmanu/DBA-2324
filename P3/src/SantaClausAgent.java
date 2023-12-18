@@ -15,6 +15,7 @@ public class SantaClausAgent extends Agent {
         addBehaviour(new CyclicBehaviour(this) {
             public void action() {
                 ACLMessage msg = blockingReceive();
+
                 if (msg.getPerformative() == ACLMessage.PROPOSE) {
                     String agentName = msg.getSender().getLocalName();
                     if (isAgentTrusted(agentName)) {

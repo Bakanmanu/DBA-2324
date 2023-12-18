@@ -6,7 +6,7 @@
 import jade.core.behaviours.CyclicBehaviour;
 
 /**
- * @class VerificarObjetivo
+ * {@code @class} VerificarObjetivo
  * @brief Clase de comportamiento que verifica si el agente ha llegado al objetivo y, en caso afirmativo, termina el agente.
  */
 @SuppressWarnings("FieldMayBeFinal")

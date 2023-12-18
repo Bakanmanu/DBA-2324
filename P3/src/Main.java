@@ -55,7 +55,7 @@ public class Main {
                 Point obj_pos = new Point(15, 15);
 
                 Sensores sensor = new Sensores(mapa, agent_pos);
-                Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y, obj_pos.x, obj_pos.y);
+                Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y);
                 AgentController agent = container.createNewAgent("ComportamientoAgente", ComportamientoAgente.class.getName(), new Object[]{env});
                 agent.start();
 
