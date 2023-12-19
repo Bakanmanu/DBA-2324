@@ -37,9 +37,9 @@ public class Main2 {
             Sensores sensor = new Sensores(mapa, agent_pos);
             Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y);
 
-
+            int numRenos = coords.size();
             // Lanzar agentes
-            AgentController santaClausController = container.createNewAgent("SantaClaus", SantaClausAgent.class.getName(), null);
+            AgentController santaClausController = container.createNewAgent("SantaClaus", SantaClausAgent.class.getName(), new Object[]{numRenos});
             AgentController rudolphController = container.createNewAgent("Rudolph", RudolphAgent.class.getName(), new Object[]{coords});
             AgentController buscadorController = container.createNewAgent("Buscador", BuscadorAgent.class.getName(), new Object[]{env});
 

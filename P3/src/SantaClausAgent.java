@@ -10,6 +10,7 @@ import java.util.Random;
 public class SantaClausAgent extends Agent {
     private Point  santaPos = new Point(3,3);
     private int cantRenos = 0;
+    private int totalRenos = 0;
     private boolean isAgentTrusted(String agentName) {
         Random random = new Random();
 //        return random.nextDouble() <= 0.8;
@@ -17,6 +18,18 @@ public class SantaClausAgent extends Agent {
     }
 
     protected void setup() {
+
+        Object[] args = getArguments();
+        if (args != null && args.length == 1) {
+            totalRenos = (int) args[0];
+            System.out.println("Argumentos correctos.");
+
+        } else {
+            // Manejo de error si los argumentos no son válidos
+            System.out.println("Argumentos incorrectos buscador.");
+            doDelete(); // Eliminar el agente si los argumentos no son válidos
+        }
+
         addBehaviour(new OneShotBehaviour(this) {   // Reply de Propose inicial
             public void action() {
                 ACLMessage msg = blockingReceive();
@@ -52,7 +65,7 @@ public class SantaClausAgent extends Agent {
             @Override
             public boolean done() { // cuando encuentra a todos los renos termina el comportamiento
                 System.out.println("\t\t\t Done: la cantidad de renos que le hemos confirmado a santa es: "+ cantRenos);
-                return cantRenos == 8;
+                return cantRenos == totalRenos;
             }
         });
 
@@ -61,7 +74,7 @@ public class SantaClausAgent extends Agent {
             @Override
             public void action() {
 
-                if(cantRenos == 8){
+                if(cantRenos == totalRenos){
 
                     System.out.println("Iniciado el Respuesta del Request de Buscador a Santa");
                     ACLMessage msg = blockingReceive();
@@ -94,7 +107,7 @@ public class SantaClausAgent extends Agent {
             boolean terminado = false;
             @Override
             public void action() {
-                if(cantRenos == 9){
+                if(cantRenos == totalRenos+1){
 
                     System.out.println("\t\t\t Entro en renos > 8 .");
                     ACLMessage msg = blockingReceive();
