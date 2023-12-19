@@ -28,14 +28,18 @@ class VerificarObjetivo extends CyclicBehaviour {
     public void action() {
         numSteps++;
         System.out.println("Comprobamos si objetivo encontrado. ");
+        BuscadorAgent miAgente = (BuscadorAgent) myAgent;
 
+        System.out.println(miAgente.getBehavioursCnt());
         // Verifica si la posición actual del agente es igual al objetivo
         if (env.getAgentePos().equals(env.getObjetivo())) {
             System.out.println("ENCONTRADO en el paso: " + numSteps);
-            BuscadorAgent miAgente = (BuscadorAgent) myAgent;
             miAgente.setRenoEncontrado(true);                           // Encontramos el reno
             miAgente.setIdReno(miAgente.getIdReno()+1);
             miAgente.setDecisionMov(false);
+//            if (miAgente.getIdReno()>8){
+//                miAgente.doDelete();
+//            }
             // Termina el agente
 //            myAgent.doDelete();
         }

@@ -28,16 +28,9 @@ boolean busquedaTerminada = false;
                 if (reply.getContent().equals("Finished")) {
                     System.out.println("Busqueda terminada.");
                     busquedaTerminada = true;
-                    miAgente.doDelete();
-                    // Cambiar clase anonima añadir behave de request a santa cuadno tengo todos lso renos
-                    miAgente.addBehaviour(new OneShotBehaviour() {
-                        @Override
-                        public void action() {
-
-                        }
-                    });
+                    // Añadimos el comportamiento de pedir la posicion una vez terminemos de pedir posiciones de renos
+                    miAgente.addBehaviour(new RequestLocationSanta());
                 } else {
-
                     System.out.println(reply.getContent());
                     String[] coords = reply.getContent().split(",");
 

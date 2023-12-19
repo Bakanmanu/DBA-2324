@@ -24,7 +24,7 @@ public class RudolphAgent extends Agent {
             System.out.println("Argumentos incorrectos.");
             doDelete(); // Eliminar el agente si los argumentos no son válidos
         }
-        addBehaviour(new CyclicBehaviour(this) {
+        addBehaviour(new CyclicBehaviour(this) {    // Comportamiento genérico
 
             public void action() {
                 ACLMessage msg = blockingReceive();
@@ -45,7 +45,6 @@ public class RudolphAgent extends Agent {
                 }else{
                     // request de ubi renos
                     if(msg.getPerformative() == ACLMessage.REQUEST) {
-                        String receivedCode = msg.getConversationId();
                         ACLMessage reply = msg.createReply();
 
                         reply.setPerformative(ACLMessage.INFORM);
@@ -59,6 +58,7 @@ public class RudolphAgent extends Agent {
                             // una vez llegado al ultimo, recibiremos que el indice es igual al tamaño del array de renos
                             // por ello mandamos el "Finished"
                             to_send = "Finished";
+                            doDelete();
                         }
                         reply.setContent(to_send);
                         send(reply);
@@ -76,8 +76,6 @@ public class RudolphAgent extends Agent {
         // Obtener las coordenadas del siguiente reno e incrementar el indice
         Point reno = coordenadasRenos.get(index);
         index++;
-
         return reno;
     }
-
 }

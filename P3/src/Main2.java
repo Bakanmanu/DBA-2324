@@ -19,8 +19,12 @@ public class Main2 {
             ArrayList<Point> coords = new ArrayList<>();
             coords.add(new Point(8,5));
             coords.add(new Point(1,1));
-            coords.add(new Point(2,5));
-
+            coords.add(new Point(2,4));
+            coords.add(new Point(2,3));
+            coords.add(new Point(2,2));
+            coords.add(new Point(2,1));
+            coords.add(new Point(1,5));
+            coords.add(new Point(1,9));
 //            coords.add(new Point(31,18));
 //            coords.add(new Point(22,22));
 //            coords.add(new Point(0,0));
