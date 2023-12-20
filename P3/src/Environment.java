@@ -85,7 +85,7 @@ public class Environment {
 
     public void setObjetivo(Point p) {
         obj_pos = p;
-        System.out.println(obj_pos.toString());
+//        System.out.println(obj_pos.toString());
         mapa.setValorCelda(p.x, p.y, ID_OBJETIVO);
 
         this.memoria = mapa.clone();

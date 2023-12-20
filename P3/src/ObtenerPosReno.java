@@ -13,8 +13,7 @@ boolean busquedaTerminada = false;
         BuscadorAgent miAgente = (BuscadorAgent) myAgent;
 
         if (miAgente.isRenoEncontrado()) {
-
-            System.out.println("Buscando renos");
+//            System.out.println("Buscando renos");
             // Preguntar a Rudolph por las coordenadas de los renos
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 

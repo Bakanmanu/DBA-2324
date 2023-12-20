@@ -31,12 +31,12 @@ class Movimiento extends CyclicBehaviour {
         for(int i = 0; i < env.getPosiciones().size(); i++) {
             if (env.getSensores().getAround(env.getPosiciones()).get(i) != null){
                 if (env.getSensores().getAround(env.getPosiciones()).get(i) == env.ID_OBJETIVO) {
-                    System.out.println("------------------ Ultimo Movimiento ------------------");
-                    System.out.println("Valor next cell" + env.getSensores().getAround(env.getPosiciones()));
+//                    System.out.println("------------------ Ultimo Movimiento ------------------");
+//                    System.out.println("Valor next cell" + env.getSensores().getAround(env.getPosiciones()));
 
                     Point next_p = env.getNextPositon(env.getPosiciones().get(i));
 
-                    System.out.println("Siguiente posicion" + next_p.toString());
+//                    System.out.println("Siguiente posicion" + next_p.toString());
 
                     Point last = env.actualizarPosicionAgente(env.getAgentePos().x + next_p.x, env.getAgentePos().y + next_p.y,1);
                     env.getSensores().setVision(env.getSensores().see(env.getAgentePos(), env.getMemoria()));
@@ -48,7 +48,7 @@ class Movimiento extends CyclicBehaviour {
         }
 
         if (!miAgente.isDecisionMov()) {
-            System.out.println("------------------ Movimiento en busca del objetivo------------------");
+//            System.out.println("------------------ Movimiento en busca del objetivo------------------");
 
             Point next_p = null;
             java.util.List<Map.Entry<POSICIONES, Integer>> mejores = new ArrayList<>();
@@ -69,9 +69,10 @@ class Movimiento extends CyclicBehaviour {
             // Los ordeno de menor a mayor
             Collections.sort(mejores, Comparator.comparing(Map.Entry::getValue, Comparator.nullsLast(Comparator.naturalOrder())));
 
-            for (Map.Entry<POSICIONES, Integer> p : mejores) {
+           /* for (Map.Entry<POSICIONES, Integer> p : mejores) {
                 System.out.println("Opciones: " + p.getKey() + " : " + p.getValue());
-            }
+               }
+           */
 
             // Escojo la mejor opcion y que sea valida
             for (Map.Entry<POSICIONES, Integer> entry : mejores) {
@@ -79,9 +80,9 @@ class Movimiento extends CyclicBehaviour {
                 Integer value = entry.getValue();
 
                 if (value >= 0) {
-                    System.out.println("Escogida :" + key + " : " + value);
+//                    System.out.println("Escogida :" + key + " : " + value);
                     next_p = env.getNextPositon(key);
-                    System.out.println("Siguiente posicion2: " + key);
+//                    System.out.println("Siguiente posicion2: " + key);
                     break;
                 }
 
@@ -89,8 +90,8 @@ class Movimiento extends CyclicBehaviour {
             // Me muevo hacia alli
             assert next_p != null;
             Point last = env.actualizarPosicionAgente(env.getAgentePos().x + next_p.x, env.getAgentePos().y + next_p.y, 1);
-            System.out.println("\tActualizando el valor de la celda: " + last);
-            System.out.println("\tValor de la celda: " + env.getMapa().getValorCelda(last.x, last.y));
+//            System.out.println("\tActualizando el valor de la celda: " + last);
+//            System.out.println("\tValor de la celda: " + env.getMapa().getValorCelda(last.x, last.y));
             env.getSensores().setVision(env.getSensores().see(env.getAgentePos(), env.getMemoria()));
         }
 

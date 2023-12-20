@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class SantaClausAgent extends Agent {
-    private Point  santaPos = new Point(3,3);
+    private Point  santaPos = new Point(33,33);
     private int cantRenos = 0;
     private int totalRenos = 0;
     private boolean isAgentTrusted(String agentName) {
@@ -55,16 +55,14 @@ public class SantaClausAgent extends Agent {
             public void action() {
 
                 ACLMessage msg = blockingReceive();
-                System.out.println("\t\t\tEntro en renos < 8.");
                 if(msg.getPerformative() == ACLMessage.INFORM){
-                    System.out.println("\tLaponia - Santa: bomba O.o encontrño el reno nº: "+cantRenos);
+                    System.out.println("\tLaponia - Santa: bomba O.o encontro el reno nº: "+cantRenos);
                     cantRenos++;
                 }
 
             }
             @Override
             public boolean done() { // cuando encuentra a todos los renos termina el comportamiento
-                System.out.println("\t\t\t Done: la cantidad de renos que le hemos confirmado a santa es: "+ cantRenos);
                 return cantRenos == totalRenos;
             }
         });
@@ -73,13 +71,8 @@ public class SantaClausAgent extends Agent {
             boolean terminado = false;
             @Override
             public void action() {
-
                 if(cantRenos == totalRenos){
-
-                    System.out.println("Iniciado el Respuesta del Request de Buscador a Santa");
                     ACLMessage msg = blockingReceive();
-                    System.out.println("Despues del bloqueo de Iniciado el Respuesta del Request de Buscador a Santa");
-
                     if (msg.getPerformative() == ACLMessage.REQUEST) {
                         ACLMessage reply = msg.createReply();
 
@@ -93,13 +86,10 @@ public class SantaClausAgent extends Agent {
                         terminado = true;
                     }
                 }
-
             }
-
             @Override
             public boolean done() {
                 return terminado;
-
             }
         });
 
@@ -108,16 +98,12 @@ public class SantaClausAgent extends Agent {
             @Override
             public void action() {
                 if(cantRenos == totalRenos+1){
-
-                    System.out.println("\t\t\t Entro en renos > 8 .");
                     ACLMessage msg = blockingReceive();
-
                     if (msg.getPerformative() == ACLMessage.INFORM) {
                         ACLMessage reply = msg.createReply();
-
                         reply.setPerformative(ACLMessage.INFORM);
-                        String mensaje = "HoHoHo! Feliz Navidad!";
 
+                        String mensaje = "HoHoHo! Feliz Navidad!";
                         reply.setContent(mensaje);
                         send(reply);
                         System.out.println(mensaje);
@@ -125,13 +111,11 @@ public class SantaClausAgent extends Agent {
                         doDelete();
                     }
                 }
-
             }
 
             @Override
             public boolean done() {
                 return terminado;
-
             }
         });
     }

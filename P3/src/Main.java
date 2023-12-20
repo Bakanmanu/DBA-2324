@@ -1,69 +1,61 @@
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+
+import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
-import jade.wrapper.StaleProxyException;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
-
-/**
-* Función main que ejecuta todos los mapas inicializando el container
-* */
 public class Main {
+
     public static void main(String[] args) {
         try {
-            System.out.println(Arrays.toString(args));
-
+            // Configuración de JADE
             Runtime rt = Runtime.instance();
             Profile profile = new ProfileImpl();
-            profile.setParameter(Profile.MAIN_HOST, "localhost");
-            profile.setParameter(Profile.CONTAINER_NAME, "dba_server");
-            ContainerController container = rt.createMainContainer(profile);
+            AgentContainer container = rt.createMainContainer(profile);
+            ArrayList<Point> coords = new ArrayList<>();
+            // Coordenadas para 10x10
+            /*coords.add(new Point(8,5));
+            coords.add(new Point(1,1));
+            coords.add(new Point(2,4));
+            coords.add(new Point(2,3));
+            coords.add(new Point(2,2));
+            coords.add(new Point(2,1));
+            coords.add(new Point(1,5));
+            coords.add(new Point(1,9));*/
+            // Coordenadas para 40x40
+            coords.add(new Point(8,5));
+            coords.add(new Point(31,18));
+            coords.add(new Point(22,22));
+            coords.add(new Point(0,0));
+            coords.add(new Point(39,39));
+            coords.add(new Point(15,23));
+            coords.add(new Point(26,35));
+            coords.add(new Point(18,5));
 
-            run(container);
+            Mapa mapa = new Mapa(args[0]);
+            Point agent_pos = new Point(0, 0);
+            Point obj_pos = new Point(7, 7);
+
+            Sensores sensor = new Sensores(mapa, agent_pos);
+            Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y);
+
+            int numRenos = coords.size();
+            // Lanzar agentes
+            AgentController santaClausController = container.createNewAgent("SantaClaus", SantaClausAgent.class.getName(), new Object[]{numRenos});
+            AgentController rudolphController = container.createNewAgent("Rudolph", RudolphAgent.class.getName(), new Object[]{coords});
+            AgentController buscadorController = container.createNewAgent("Buscador", BuscadorAgent.class.getName(), new Object[]{env});
+
+
+            santaClausController.start();
+            rudolphController.start();
+            buscadorController.start();
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-    /**
-     *
-     * Funcion para ejecutar todos los mapas
-     *
-     * */
-    public static void run(ContainerController container) {
-        try {
-
-            String[] mapFiles = {
-//                    "maps/mapaJodio.txt",
-//                    "maps/mapWithComplexObstacle1.txt",
-//                    "maps/mapWithComplexObstacle2.txt",
-//                    "maps/mapWithComplexObstacle3.txt",
-//                    "maps/mapWithDiagonalWall.txt"
-//                    "maps/mapWithHorizontalWall.txt",
-//                    "maps/mapWithoutObstacleP3.txt",
-//                    "maps/mapWithVerticalWall.txt"
-                    "maps/mapComplex.txt"
-            };
-
-            for (String mapFile : mapFiles) {
-                Mapa mapa = new Mapa(mapFile);
-                Point agent_pos = new Point(29, 15);
-                Point obj_pos = new Point(15, 15);
-
-                Sensores sensor = new Sensores(mapa, agent_pos);
-                Environment env = new Environment(mapa, sensor, agent_pos.x, agent_pos.y);
-                AgentController agent = container.createNewAgent("ComportamientoAgente", ComportamientoAgente.class.getName(), new Object[]{env});
-                agent.start();
-
-                sleep(2000);
-            }
-
-        } catch (Error | StaleProxyException | InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 }

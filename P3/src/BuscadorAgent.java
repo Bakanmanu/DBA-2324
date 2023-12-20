@@ -15,7 +15,7 @@ public class BuscadorAgent extends Agent {
     private int idReno = -1;      // id del reno encontrado
 
 
-    private final ArrayList<String> nameRenos = new ArrayList<>(Arrays.asList("Dasher", "Dancer", "Prancer", "Vixen", "Comet", "Cupid", "Donner", "Blitzen", "Santa"));
+    private final ArrayList<String> nameRenos = new ArrayList<>(Arrays.asList("Dasher", "Dancer", "Prancer", "Vixen", "Comet", "Cupid", "Donner", "Blitzen", "nuestro punto de encuentro"));
     private Point agent_pos = new Point(0, 0);
     private Environment env;
     private Mapa mapa;
@@ -31,7 +31,7 @@ public class BuscadorAgent extends Agent {
 //        mapa = (Mapa) args[0];
 //        sensor = (Sensores) args[1];
 
-            System.out.println("Argumentos correctos.");
+           // System.out.println("Argumentos correctos.");
 
         } else {
             // Manejo de error si los argumentos no son válidos
@@ -51,8 +51,8 @@ public class BuscadorAgent extends Agent {
         // Ciclo de busqueda cada reno
         addBehaviour(new MostrarMapa(getEnv()));
         addBehaviour(new GetInformation(getEnv()));
-        addBehaviour(new Movimiento(getEnv()));
         addBehaviour(new VerificarObjetivo(getEnv()));
+        addBehaviour(new Movimiento(getEnv()));
 
         // Avisamos a Santa cada vez que encontramos un reno
         addBehaviour(new InformRenoSanta());
